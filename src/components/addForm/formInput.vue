@@ -1,8 +1,8 @@
 <template>
   <label class="add-form__label">
     <p class="add-form__label-text">{{text}}<i v-if="required" class="add-form__label-required"></i></p>
-    <input @input="checkInput" :pattern="pattern" class="add-form__input" :placeholder="placeholder" :type="type" :name="name" :required="required" v-if="!textArea">
-    <textarea @input="checkInput" class="add-form__textarea" :placeholder="placeholder" :name="name" v-else></textarea>
+    <input v-model="input" @input="checkInput" :pattern="pattern" class="add-form__input" :placeholder="placeholder" :type="type" :name="name" :required="required" v-if="!textArea">
+    <textarea @input="checkInput" class="add-form__textarea add-form__input" :placeholder="placeholder" :name="name" maxlength="150" v-else></textarea>
     <span class="add-form__error-text" :class="error ? 'add-form__error-text_show' : ''" >Поле является обязательным</span>
   </label>
 </template>
@@ -13,13 +13,19 @@ export default {
   props: ['text','name','required','type','placeholder','textArea','pattern'],
   data () {
     return {
-      error: false
+      error: false,
+      input: ''
     }
   },
   methods: {
     checkInput (e) {
       if (this.required) {
         e.target.value.length === 0 ? this.error = true : this.error = false
+      }
+      this.error ? e.target.classList.add('add-form__input_error') : e.target.classList.remove('add-form__input_error')
+      if(this.name === 'priceProduct') {
+        const stringNumber = Number(this.input.replace(/\D/g,'')).toLocaleString('ru')
+        e.target.value = stringNumber
       }
     }
   }
@@ -68,12 +74,17 @@ export default {
   background: #FFFEFB
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1)
   border-radius: 4px
-  border: none
   padding: 10px 16px
   box-sizing: border-box
   outline: none
+  transition: .35s
+  border: 1px solid transparent
   &::placeholder
     color: #B4B4B4
+  &:focus
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3)
+.add-form__input_error
+  border: 1px solid #FF8484
 .add-form__textarea
   font-family: 'Source Sans Pro', sans-serif
   font-style: normal

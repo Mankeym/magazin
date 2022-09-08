@@ -1,5 +1,9 @@
-# project
+# Product Magazin
 
+## Node version
+```
+v16.16.0
+```
 ## Project setup
 ```
 yarn install
